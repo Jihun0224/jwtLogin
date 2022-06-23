@@ -7,7 +7,7 @@ import Avatar from "@mui/material/Avatar";
 import kakaoImg from "../assets/images/kakao.png";
 import NaverImg from "../assets/images/naver.png";
 import { Link } from "react-router-dom";
-
+import axios from 'axios';
 
 function Login() {
     const theme = createTheme({
@@ -31,8 +31,19 @@ function Login() {
         });
     }
 
-    const onSubmit = () => {
-        //여기 서버에 보냄
+    const onSubmit = (e) => {
+        e.preventDefault();
+
+        var url = "http://localhost:8080/api/authenticate"
+        axios.post(url, {
+            username: loginInfo.name,
+            password: loginInfo.password
+        })
+            .then((response) => {
+                console.log(response);
+            }).catch((error) => {
+                console.log(error);
+            })
     }
 
     return (
@@ -48,9 +59,8 @@ function Login() {
                                     width: "320px"
                                 }}
                                 margin="dense"
-                                id="outlined-basic"
                                 label="Id"
-                                name="id"
+                                name="name"
                                 variant="outlined"
                                 onInput={onInput} />
                         </ThemeProvider>
@@ -61,7 +71,6 @@ function Login() {
                                     width: "320px"
                                 }}
                                 margin="dense"
-                                id="outlined-basic"
                                 label="Password"
                                 type="password"
                                 name="password"
