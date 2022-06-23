@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 
-function Register() {
+function SignUp() {
+
     const [name, setName] = useState("")
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+
     const onNameHandler = (event) => {
         setName(event.currentTarget.value)
     }
@@ -27,4 +29,4 @@ function Register() {
         </div>
     )
 }
-export default Register
+export default SignUp

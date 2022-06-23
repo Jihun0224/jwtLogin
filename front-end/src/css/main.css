@@ -1,0 +1,96 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #02343F;
+}
+
+/** Main CSS**/
+.wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    left: 50vw;
+    top: 50vh;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+#find-user-info {
+    margin-top: 10px;
+    text-align: right;
+    margin-right: 45px;
+    color: #02343F;
+    font-size: small;
+}
+
+.wrap h1 {
+    color: #F0EDCC;
+}
+
+#main-btns-wrap {
+    display: table;
+    width: 40vw;
+    height: 40vh;
+    background-color: #F0EDCC;
+}
+
+#main-btns-layer {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#main-btns-wrap #main-btns {
+    display: inline-block;
+    position: relative;
+}
+
+#sign-up-btn {
+    margin-left: 50px;
+}
+
+/** Login CSS**/
+#loginForm h2 {
+    color: #02343F;
+}
+
+#loginForm h4 {
+    color: #02343F;
+}
+
+#loginForm h5 {
+    color: #02343F;
+}
+
+#login-btns-wrap {
+    width: 400px;
+    height: 300px;
+    display: table;
+    background-color: #F0EDCC;
+}
+
+#loginForm {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#login-btn {
+    width: 320px;
+}
+
+#loginForm ul li {
+    display: inline-block;
+    list-style-type: none;
+    margin-left: 20px;
+
+}
+
+#loginForm ul {
+    width: 100%;
+    margin: auto;
+    padding: 0;
+}
+
+/** Sign-up CSS**/
