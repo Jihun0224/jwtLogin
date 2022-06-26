@@ -6,10 +6,12 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Avatar from "@mui/material/Avatar";
 import kakaoImg from "../assets/images/kakao.png";
 import NaverImg from "../assets/images/naver.png";
+import IconButton from "@mui/material/IconButton";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 
 function Login() {
+    const { Kakao } = window;
     const theme = createTheme({
         palette: {
             primary: {
@@ -30,10 +32,25 @@ function Login() {
             return { ...prev, [name]: value };
         });
     }
-
+    const kakaoLoginClickHanndler = e => {
+        Kakao.Auth.login({
+            success: function (authObj) {
+                axios.post("http://localhost:8080/api/kakao", {
+                    access_token: authObj.access_token
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        console.log(res);
+                    })
+            },
+            fail: function (err) {
+                console.log(JSON.stringify(err));
+                alert("다시 입력해주세요.")
+            }
+        })
+    }
     const onSubmit = (e) => {
         e.preventDefault();
-
         var url = "http://localhost:8080/api/authenticate"
         axios.post(url, {
             username: loginInfo.name,
@@ -45,7 +62,6 @@ function Login() {
                 console.log(error);
             })
     }
-
     return (
         <div className="login-form">
             <Paper elevation={3} id="login-btns-wrap">
@@ -96,18 +112,23 @@ function Login() {
                         <ul>
                             <h4>SNS 계정으로 로그인 하기</h4>
                             <li>
-                                <Avatar
-                                    alt="카카오로 로그인하기"
-                                    src={kakaoImg}
-                                    sx={{ width: 45, height: 45 }}
-                                />
+                                <IconButton onClick={kakaoLoginClickHanndler}>
+                                    <Avatar
+                                        alt="카카오로 로그인하기"
+                                        src={kakaoImg}
+                                        sx={{ width: 45, height: 45 }}
+                                    />
+                                </IconButton>
+
                             </li>
                             <li>
-                                <Avatar
-                                    alt="네이버로 로그인하기"
-                                    src={NaverImg}
-                                    sx={{ width: 45, height: 45 }}
-                                />
+                                <IconButton onClick={kakaoLoginClickHanndler}>
+                                    <Avatar
+                                        alt="네이버로 로그인하기"
+                                        src={NaverImg}
+                                        sx={{ width: 45, height: 45 }}
+                                    />
+                                </IconButton>
                             </li>
                         </ul>
                     </div>
@@ -126,8 +147,8 @@ function Login() {
                     </div>
                     <br />
                 </div>
-            </Paper>
-        </div>
+            </Paper >
+        </div >
     )
 }
 export default Login;
