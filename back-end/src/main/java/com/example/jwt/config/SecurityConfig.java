@@ -64,13 +64,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
+                //요청에 대한 권한 체크
                 .authorizeRequests()
-                .antMatchers("/api/authenticate").permitAll()
-                .antMatchers("/api/signup").permitAll()
-
-                .anyRequest().authenticated()
-
-                .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
+//                .antMatchers("/api/authenticate").permitAll()
+//                .antMatchers("/api/signup").permitAll()
+//                .antMatchers("/api/kakao").permitAll()
+//                .anyRequest().authenticated()
+                .anyRequest().permitAll();
+//                .and()
+//                .apply(new JwtSecurityConfig(tokenProvider));
     }
 }

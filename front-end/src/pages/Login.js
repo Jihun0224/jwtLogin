@@ -35,8 +35,13 @@ function Login() {
     const kakaoLoginClickHanndler = e => {
         Kakao.Auth.login({
             success: function (authObj) {
+                console.log(authObj.access_token);
                 axios.post("http://localhost:8080/api/kakao", {
                     access_token: authObj.access_token
+                }, {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 })
                     .then(res => res.json())
                     .then(res => {
