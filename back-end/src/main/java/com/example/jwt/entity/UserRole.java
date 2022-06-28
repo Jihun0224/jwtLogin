@@ -1,7 +1,7 @@
 package com.example.jwt.entity;
 
 public enum UserRole {
-    ADMIN("ROLE_ADMIN"),USER_ROLE("ROLE_USER");
+    ADMIN("ROLE_ADMIN"),USER("ROLE_USER");
 
     private String roleName;
 

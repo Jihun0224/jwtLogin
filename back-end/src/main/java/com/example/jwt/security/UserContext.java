@@ -13,13 +13,19 @@ import java.util.stream.Collectors;
 //PostAuthorizationToken의 authorities 생성
 public class UserContext extends User {
 
-    private UserContext(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    private com.example.jwt.entity.User user;
+
+    private UserContext(com.example.jwt.entity.User user, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
+        this.user=user;
     }
     public static UserContext fromUserModel(com.example.jwt.entity.User user){
-        return new UserContext(user.getUserId(),user.getPassword(),parseAuthorities(user.getUserRole()));
+        return new UserContext(user, user.getUserId(),user.getPassword(),parseAuthorities(user.getUserRole()));
     }
     private static List<SimpleGrantedAuthority>parseAuthorities(UserRole role){
         return Arrays.asList(role).stream().map(r->new SimpleGrantedAuthority(r.getRoleName())).collect(Collectors.toList());
+    }
+    public com.example.jwt.entity.User getUser(){
+        return user;
     }
 }

@@ -3,25 +3,25 @@ package com.example.jwt.security.providers;
 import com.example.jwt.entity.User;
 import com.example.jwt.repository.UserRepository;
 import com.example.jwt.security.UserContext;
-import com.example.jwt.security.UserContextService;
 import com.example.jwt.security.tokens.PostAuthorizationToken;
 import com.example.jwt.security.tokens.PreAuthorizationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.util.NoSuchElementException;
 
+//최초 로그인 시 정보를 걸러냄
+@Component
 public class FormLoginAuthenticationProvider implements AuthenticationProvider {
 
-    private final UserContextService userContextService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    FormLoginAuthenticationProvider(UserContextService userContextService,
-                                    UserRepository userRepository,
+
+    FormLoginAuthenticationProvider(UserRepository userRepository,
                                     PasswordEncoder passwordEncoder){
-        this.userContextService = userContextService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }

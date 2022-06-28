@@ -17,17 +17,17 @@ public class User {
     private Long id;
 
     @Column(name = "loginid",length = 20, unique = true)
-    private String userId;
+    private String userId="testId";
 
     @Column(name = "username", length = 50, unique = true)
-    private String username;
+    private String username="testName";
 
     @Column(name = "password", length = 100)
-    private String password;
+    private String password="1234";
 
     @Column(name="userRole")
     @Enumerated(value = EnumType.STRING)
-    private UserRole UserRole;
+    private UserRole userRole= UserRole.USER;
 
     @Column(name = "social_id")
     private long socialId;
