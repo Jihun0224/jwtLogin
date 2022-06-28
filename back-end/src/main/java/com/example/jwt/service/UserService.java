@@ -50,6 +50,7 @@ public class UserService {
                 .nickname(userDto.getNickname())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
+                .isSocial(false)
                 .build();
 
         return userRepository.save(user);
@@ -96,18 +97,31 @@ public class UserService {
             JSONObject jsonObj = new JSONObject();
             jsonObj = (JSONObject) parser.parse(result);
 
-            UserDto user = new UserDto();
+            UserDto userDto = new UserDto();
             JSONObject kakao_account = (JSONObject) jsonObj.get("kakao_account");
             JSONObject profile =(JSONObject) kakao_account.get("profile");
 
-            user.setUsername(kakao_account.get("email").toString());
-            user.setNickname(profile.get("nickname").toString());
-            logger.debug(user.toString());
-
+            userDto.setUsername(kakao_account.get("email").toString());
+            userDto.setNickname(profile.get("nickname").toString());
+            logger.debug(userDto.toString());
             //일치하는 회원 X -> 가입 후 로그인 처리
-
+            if (userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).orElse(null) == null){
+                Authority authority = Authority.builder()
+                        .authorityName("ROLE_USER")
+                        .build();
+                User user = User.builder()
+                        .username(userDto.getUsername())
+                        .nickname(userDto.getNickname())
+                        .authorities(Collections.singleton(authority))
+                        .activated(true)
+                        .isSocial(true)
+                        .build();
+                userRepository.save(user);
+            }
             //일치하는 회원 O -> 로그인 처리
+            else{
 
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -115,7 +129,5 @@ public class UserService {
             logger.debug("JSON 변환 실패");
             e.printStackTrace();
         }
-
-
     }
 }
