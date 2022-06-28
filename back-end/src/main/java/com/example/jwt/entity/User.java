@@ -25,9 +25,9 @@ public class User {
     @Column(name = "password", length = 100)
     private String password;
 
-    @Column(name="ACCOUNT_ROLE")
+    @Column(name="userRole")
     @Enumerated(value = EnumType.STRING)
-    private String UserRole;
+    private UserRole UserRole;
 
     @Column(name = "social_id")
     private long socialId;
