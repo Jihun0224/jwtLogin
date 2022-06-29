@@ -1,9 +1,8 @@
 package com.example.jwt.config;
 
-import com.example.jwt.jwt.JwtSecurityConfig;
-import com.example.jwt.jwt.JwtAccessDeniedHandler;
-import com.example.jwt.jwt.JwtAuthenticationEntryPoint;
-import com.example.jwt.jwt.TokenProvider;
+import com.example.jwt.security.JwtAccessDeniedHandler;
+import com.example.jwt.security.JwtAuthenticationEntryPoint;
+import com.example.jwt.security.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)

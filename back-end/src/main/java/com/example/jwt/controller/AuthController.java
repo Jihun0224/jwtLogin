@@ -2,8 +2,8 @@ package com.example.jwt.controller;
 
 import com.example.jwt.dto.LoginDto;
 import com.example.jwt.dto.TokenDto;
-import com.example.jwt.jwt.JwtFilter;
-import com.example.jwt.jwt.TokenProvider;
+import com.example.jwt.security.JwtFilter;
+import com.example.jwt.security.TokenProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
