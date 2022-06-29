@@ -46,6 +46,30 @@ function Login() {
                     .then(res => res.json())
                     .then(res => {
                         console.log(res);
+                        this.props.location.state.setIsLogin();
+                        history.push("/")
+                    })
+            },
+            fail: function (err) {
+                console.log(JSON.stringify(err));
+                alert("다시 입력해주세요.")
+            }
+        })
+    }
+    const naverLoginClickHanndler = e => {
+        Kakao.Auth.login({
+            success: function (authObj) {
+                console.log(authObj.access_token);
+                axios.post("http://localhost:8080/api/kakao", {
+                    access_token: authObj.access_token
+                }, {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        console.log(res);
                     })
             },
             fail: function (err) {

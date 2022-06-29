@@ -18,25 +18,29 @@ function Main() {
             }
         }
     })
+    const login = () => {
+        setIsLogin(true);
+    }
     return (
-        <div>
-            <Paper elevation={3} id="main-btns-wrap">
-                <div id="main-btns-layer">
-                    <div id="main-btns">
-                        <ThemeProvider theme={theme}>
-                            <Button component={Link} to="/login" color="primary" variant="contained" size="large">
-                                Log in
-                            </Button>
-                        </ThemeProvider>
-                        <ThemeProvider theme={theme}>
-                            <Button component={Link} to="/signup" color="primary" variant="contained" size="large" id="sign-up-btn">
-                                Sign up
-                            </Button>
-                        </ThemeProvider>
-                    </div>
+        <Paper elevation={3} id="main-btns-wrap">
+            <div id="main-btns-layer">
+                <div id="main-btns">
+                    <ThemeProvider theme={theme}>
+                        <Button component={Link} to={{
+                            pathname: "/login",
+                            state: { setIsLogin: this.login }
+                        }} color="primary" variant="contained" size="large">
+                            Log in
+                        </Button>
+                    </ThemeProvider>
+                    <ThemeProvider theme={theme}>
+                        <Button component={Link} to="/signup" color="primary" variant="contained" size="large" id="sign-up-btn">
+                            Sign up
+                        </Button>
+                    </ThemeProvider>
                 </div>
-            </Paper>
-        </div>
+            </div>
+        </Paper>
     )
 }
 export default Main
