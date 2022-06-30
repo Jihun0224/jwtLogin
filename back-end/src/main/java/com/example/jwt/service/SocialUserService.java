@@ -1,10 +1,9 @@
 package com.example.jwt.service;
 
-import com.example.jwt.dto.UserDto;
+import com.example.jwt.dto.SocialUserDto;
 
 public interface SocialUserService {
-    void createUser(String access_token);
-    String getUserInfoByAccessToken(String access_token);
-    UserDto StringToDto(String userInfo);
+    SocialUserDto getUserInfoByAccessToken(String access_token);
+    SocialUserDto StringToDto(String userInfo);
 
 }

@@ -28,7 +28,6 @@ function Main() {
                     <ThemeProvider theme={theme}>
                         <Button component={Link} to={{
                             pathname: "/login",
-                            state: { setIsLogin: this.login }
                         }} color="primary" variant="contained" size="large">
                             Log in
                         </Button>

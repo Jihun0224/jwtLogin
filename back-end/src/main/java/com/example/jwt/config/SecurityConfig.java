@@ -2,6 +2,7 @@ package com.example.jwt.config;
 
 import com.example.jwt.security.JwtAccessDeniedHandler;
 import com.example.jwt.security.JwtAuthenticationEntryPoint;
+import com.example.jwt.security.JwtSecurityConfig;
 import com.example.jwt.security.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -64,12 +65,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //요청에 대한 권한 체크
                 .authorizeRequests()
-//                .antMatchers("/api/authenticate").permitAll()
-//                .antMatchers("/api/signup").permitAll()
-//                .antMatchers("/api/kakao").permitAll()
-//                .anyRequest().authenticated()
-                .anyRequest().permitAll();
-//                .and()
-//                .apply(new JwtSecurityConfig(tokenProvider));
+                .antMatchers("/api/authenticate").permitAll()
+                .antMatchers("/api/signup").permitAll()
+                .antMatchers("/api/kakao").permitAll()
+                .anyRequest().authenticated()
+//                .anyRequest().permitAll();
+                .and()
+                .apply(new JwtSecurityConfig(tokenProvider));
     }
 }

@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
+import com.example.jwt.dto.SocialUserDto;
 import com.example.jwt.dto.UserDto;
 import com.example.jwt.repository.UserRepository;
 import org.json.simple.JSONObject;
@@ -26,18 +27,7 @@ public class KakaoUserService implements SocialUserService{
     }
 
     @Override
-    public void createUser(String access_token) {
-        String userInfo = getUserInfoByAccessToken(access_token);
-        UserDto userDto = StringToDto(userInfo);
-
-        //일치하는 회원 X -> 가입 후 로그인 처리
-
-        //일치하는 회원 O -> 로그인 처리
-
-    }
-
-    @Override
-    public String getUserInfoByAccessToken(String access_token) {
+    public SocialUserDto getUserInfoByAccessToken(String access_token) {
         String reqURL = "https://kapi.kakao.com/v2/user/me";
         String result = "";
         try {
@@ -45,10 +35,12 @@ public class KakaoUserService implements SocialUserService{
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
+
             //전송할 header 작성
             conn.setDoOutput(true);
             conn.setRequestProperty("Authorization", "Bearer " + access_token);
             conn.setRequestProperty("charset", "UTF-8");
+
             //결과 확인
             int responseCode = conn.getResponseCode();
             logger.debug("responseCode : " + responseCode);
@@ -64,11 +56,16 @@ public class KakaoUserService implements SocialUserService{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        SocialUserDto userDto = StringToDto(result);
+        //일치하는 회원 X -> 가입
+        if (userRepository.findBySocialId(userDto.getSocialId()).orElse(null) == null) {
+            userRepository.save(userDto.toEntity());
+        }
+        return userDto;
     }
-        @Override
-    public UserDto StringToDto(String userInfo) {
-            UserDto userDto = new UserDto();
+    @Override
+    public SocialUserDto StringToDto(String userInfo) {
+            SocialUserDto userDto = new SocialUserDto();
             try {
                 //JSON 파싱
                 JSONParser parser = new JSONParser();
@@ -78,9 +75,13 @@ public class KakaoUserService implements SocialUserService{
                 JSONObject kakao_account = (JSONObject) jsonObj.get("kakao_account");
                 JSONObject profile =(JSONObject) kakao_account.get("profile");
 
-                userDto.setUsername(kakao_account.get("email").toString());
-                userDto.setUsername(profile.get("nickname").toString());
+                userDto.setSocialId(Long.valueOf((jsonObj.get("id").toString())));
+                userDto.setEmail(kakao_account.get("email").toString());
+                userDto.setNickname(profile.get("nickname").toString());
+                userDto.setProfileHref(profile.get("profile_image_url").toString());
+                userDto.setPassword("1234");
                 logger.debug(userDto.toString());
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }

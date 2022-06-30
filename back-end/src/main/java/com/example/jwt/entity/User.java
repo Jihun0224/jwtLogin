@@ -30,6 +30,9 @@ public class User {
     @Column(name = "social_id")
     private long socialId;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name="social_profilepic")
     private String profileHref;
 

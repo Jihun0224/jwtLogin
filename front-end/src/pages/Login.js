@@ -32,7 +32,7 @@ function Login() {
             return { ...prev, [name]: value };
         });
     }
-    const kakaoLoginClickHanndler = e => {
+    const kakaoLoginClickHanndler = ({ history }) => {
         Kakao.Auth.login({
             success: function (authObj) {
                 console.log(authObj.access_token);
@@ -46,7 +46,7 @@ function Login() {
                     .then(res => res.json())
                     .then(res => {
                         console.log(res);
-                        this.props.location.state.setIsLogin();
+                        localStorage.setItem("user", res)
                         history.push("/")
                     })
             },

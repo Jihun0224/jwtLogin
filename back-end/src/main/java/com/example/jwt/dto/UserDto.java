@@ -3,6 +3,7 @@ package com.example.jwt.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -14,7 +15,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class UserDto {
 
-    @NotNull
     @Size(min = 3,max = 50)
     private String username;
 
@@ -26,4 +26,9 @@ public class UserDto {
     @NotNull
     @Size(min = 3,max = 50)
     private String nickname;
+
+    @NotNull
+    @Size(min = 3,max = 50)
+    private String email;
+
 }
