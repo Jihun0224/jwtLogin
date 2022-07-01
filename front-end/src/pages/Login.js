@@ -7,10 +7,12 @@ import Avatar from "@mui/material/Avatar";
 import kakaoImg from "../assets/images/kakao.png";
 import NaverImg from "../assets/images/naver.png";
 import IconButton from "@mui/material/IconButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 function Login() {
+    let navigate = useNavigate();
+
     const { Kakao } = window;
     const theme = createTheme({
         palette: {
@@ -32,7 +34,7 @@ function Login() {
             return { ...prev, [name]: value };
         });
     }
-    const kakaoLoginClickHanndler = ({ history }) => {
+    const kakaoLoginClickHanndler = () => {
         Kakao.Auth.login({
             success: function (authObj) {
                 console.log(authObj.access_token);
@@ -43,11 +45,10 @@ function Login() {
                         "Content-Type": "application/json",
                     },
                 })
-                    .then(res => res.json())
                     .then(res => {
                         console.log(res);
                         localStorage.setItem("user", res)
-                        history.push("/")
+                        navigate("/")
                     })
             },
             fail: function (err) {
@@ -67,7 +68,6 @@ function Login() {
                         "Content-Type": "application/json",
                     },
                 })
-                    .then(res => res.json())
                     .then(res => {
                         console.log(res);
                     })

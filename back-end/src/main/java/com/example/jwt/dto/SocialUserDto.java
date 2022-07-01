@@ -32,8 +32,10 @@ public class SocialUserDto {
                 .authorityName("ROLE_USER")
                 .build();
         return User.builder()
+                .username(this.email)
                 .socialId(this.socialId)
                 .nickname(this.nickname)
+                .password(this.password)
                 .authorities(Collections.singleton(authority))
                 .profileHref(this.profileHref)
                 .email(this.email)

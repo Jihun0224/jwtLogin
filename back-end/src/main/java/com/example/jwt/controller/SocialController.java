@@ -42,11 +42,13 @@ public class SocialController {
     public ResponseEntity<TokenDto>  kakaoCallback (@RequestBody HashMap<String, String> param){
         SocialUserDto socialUserDto = kakaoUserService.getUserInfoByAccessToken(param.get("access_token"));
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(socialUserDto.getSocialId(), "1234");
+                new UsernamePasswordAuthenticationToken(socialUserDto.getEmail(), socialUserDto.getSocialId());
         logger.debug(authenticationToken.toString());
+
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         logger.debug(authentication.toString());
+
         String jwt = tokenProvider.createToken(authentication);
 
         HttpHeaders httpHeaders = new HttpHeaders();

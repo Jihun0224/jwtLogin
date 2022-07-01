@@ -15,17 +15,18 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class KakaoUserService implements SocialUserService{
     private static final Logger logger = LoggerFactory.getLogger(KakaoUserService.class);
     private final UserRepository userRepository;
-
-    public KakaoUserService(UserRepository userRepository) {
+    private final PasswordEncoder passwordEncoder;
+    public KakaoUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
-
     @Override
     public SocialUserDto getUserInfoByAccessToken(String access_token) {
         String reqURL = "https://kapi.kakao.com/v2/user/me";
@@ -58,7 +59,7 @@ public class KakaoUserService implements SocialUserService{
         }
         SocialUserDto userDto = StringToDto(result);
         //일치하는 회원 X -> 가입
-        if (userRepository.findBySocialId(userDto.getSocialId()).orElse(null) == null) {
+        if (userRepository.findOneWithAuthoritiesByUsername(userDto.getEmail()).orElse(null) == null) {
             userRepository.save(userDto.toEntity());
         }
         return userDto;
@@ -69,8 +70,7 @@ public class KakaoUserService implements SocialUserService{
             try {
                 //JSON 파싱
                 JSONParser parser = new JSONParser();
-                JSONObject jsonObj = new JSONObject();
-                jsonObj = (JSONObject) parser.parse(userInfo);
+                JSONObject jsonObj = (JSONObject) parser.parse(userInfo);
 
                 JSONObject kakao_account = (JSONObject) jsonObj.get("kakao_account");
                 JSONObject profile =(JSONObject) kakao_account.get("profile");
@@ -79,7 +79,7 @@ public class KakaoUserService implements SocialUserService{
                 userDto.setEmail(kakao_account.get("email").toString());
                 userDto.setNickname(profile.get("nickname").toString());
                 userDto.setProfileHref(profile.get("profile_image_url").toString());
-                userDto.setPassword("1234");
+                userDto.setPassword(passwordEncoder.encode(jsonObj.get("id").toString()));
                 logger.debug(userDto.toString());
 
             } catch (ParseException e) {
