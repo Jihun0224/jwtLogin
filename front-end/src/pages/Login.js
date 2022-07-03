@@ -10,9 +10,8 @@ import IconButton from "@mui/material/IconButton";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-function Login() {
-    let navigate = useNavigate();
-
+const Login = ({ onLogin }) => {
+    const navigate = useNavigate();
     const { Kakao } = window;
     const theme = createTheme({
         palette: {
@@ -28,8 +27,6 @@ function Login() {
     const [loginInfo, setLoginInfo] = useState({ name: '', password: '' });
     const onInput = e => {
         const { name, value } = e.target;
-        // const name = e.target.name , const value = e.target.value인 것임.
-
         setLoginInfo(prev => {
             return { ...prev, [name]: value };
         });
@@ -46,14 +43,13 @@ function Login() {
                     },
                 })
                     .then(res => {
-                        console.log(res);
-                        localStorage.setItem("user", res)
+                        onLogin(res.data.token)
                         navigate("/")
                     })
             },
             fail: function (err) {
-                console.log(JSON.stringify(err));
                 alert("다시 입력해주세요.")
+                console.log(err);
             }
         })
     }
@@ -73,8 +69,8 @@ function Login() {
                     })
             },
             fail: function (err) {
-                console.log(JSON.stringify(err));
                 alert("다시 입력해주세요.")
+                console.log(err);
             }
         })
     }
@@ -85,9 +81,11 @@ function Login() {
             username: loginInfo.name,
             password: loginInfo.password
         })
-            .then((response) => {
-                console.log(response);
+            .then(res => {
+                onLogin(res.data.token)
+                navigate("/")
             }).catch((error) => {
+                alert("다시 입력해주세요!")
                 console.log(error);
             })
     }
