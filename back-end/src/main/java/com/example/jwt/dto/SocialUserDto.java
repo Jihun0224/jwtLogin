@@ -23,7 +23,7 @@ public class SocialUserDto {
 
     private String password;
 
-    private Long socialId;
+    private String socialId;
 
     private String profileHref;
 

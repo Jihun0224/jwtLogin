@@ -28,7 +28,7 @@ public class User {
     private String nickname;
 
     @Column(name = "social_id")
-    private long socialId;
+    private String socialId;
 
     @Column(name = "email")
     private String email;

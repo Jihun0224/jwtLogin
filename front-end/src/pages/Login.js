@@ -1,18 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Avatar from "@mui/material/Avatar";
 import kakaoImg from "../assets/images/kakao.png";
-import NaverImg from "../assets/images/naver.png";
-import IconButton from "@mui/material/IconButton";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const Login = ({ onLogin }) => {
     const navigate = useNavigate();
-    const { Kakao } = window;
+    const { Kakao, naver } = window;
     const theme = createTheme({
         palette: {
             primary: {
@@ -35,7 +33,7 @@ const Login = ({ onLogin }) => {
         Kakao.Auth.login({
             success: function (authObj) {
                 console.log(authObj.access_token);
-                axios.post("http://localhost:8080/api/kakao", {
+                axios.post(process.env.REACT_APP_KAKAO_REDIRECT_URI, {
                     access_token: authObj.access_token
                 }, {
                     headers: {
@@ -53,27 +51,42 @@ const Login = ({ onLogin }) => {
             }
         })
     }
-    const naverLoginClickHanndler = e => {
-        Kakao.Auth.login({
-            success: function (authObj) {
-                console.log(authObj.access_token);
-                axios.post("http://localhost:8080/api/kakao", {
-                    access_token: authObj.access_token
-                }, {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
-                    .then(res => {
-                        console.log(res);
-                    })
-            },
-            fail: function (err) {
-                alert("다시 입력해주세요.")
-                console.log(err);
+    const naverLoginClickHanndler = () => {
+        const naverLogin = new naver.LoginWithNaverId(
+            {
+                clientId: "0rgjMkjviFPmCTRQSJf5",
+                callbackUrl: "http://localhost:3000/login",
+                isPopup: false,
+                callbackHandle: true,
+                loginButton: { color: 'white', type: 1, height: '47' },
             }
-        })
+        );
+        naverLogin.init();
     }
+    const UserProfile = () => {
+        window.location.href.includes('access_token') && GetUser();
+        function GetUser() {
+            const location = window.location.href.split('=')[1];
+            const token = location.split('&')[0];
+            axios.post(process.env.REACT_APP_NAVER_REDIRECT_URI, {
+                access_token: token
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then(res => {
+                    onLogin(res.data.token)
+                    console.log(res.data.token);
+                    navigate("/")
+                })
+                .catch(err => console.log("err : ", err));
+        }
+    }
+    useEffect(() => {
+        naverLoginClickHanndler();
+        UserProfile();
+    }, []);
     const onSubmit = (e) => {
         e.preventDefault();
         var url = "http://localhost:8080/api/authenticate"
@@ -139,23 +152,17 @@ const Login = ({ onLogin }) => {
                         <ul>
                             <h4>SNS 계정으로 로그인 하기</h4>
                             <li>
-                                <IconButton onClick={kakaoLoginClickHanndler}>
+                                <Button onClick={kakaoLoginClickHanndler}>
                                     <Avatar
                                         alt="카카오로 로그인하기"
                                         src={kakaoImg}
                                         sx={{ width: 45, height: 45 }}
                                     />
-                                </IconButton>
+                                </Button>
 
                             </li>
                             <li>
-                                <IconButton onClick={kakaoLoginClickHanndler}>
-                                    <Avatar
-                                        alt="네이버로 로그인하기"
-                                        src={NaverImg}
-                                        sx={{ width: 45, height: 45 }}
-                                    />
-                                </IconButton>
+                                <Button id="naverIdLogin" />
                             </li>
                         </ul>
                     </div>

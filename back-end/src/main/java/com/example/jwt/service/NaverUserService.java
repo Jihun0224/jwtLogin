@@ -1,14 +1,6 @@
 package com.example.jwt.service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-
 import com.example.jwt.dto.SocialUserDto;
-import com.example.jwt.dto.UserDto;
 import com.example.jwt.repository.UserRepository;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,18 +10,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 @Service
-public class KakaoUserService implements SocialUserService{
-    private static final Logger logger = LoggerFactory.getLogger(KakaoUserService.class);
+public class NaverUserService implements SocialUserService{
+
+    private static final Logger logger = LoggerFactory.getLogger(NaverUserService.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    public KakaoUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+
+    public NaverUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
     @Override
     public SocialUserDto getUserInfoByAccessToken(String access_token) {
-        String reqURL = "https://kapi.kakao.com/v2/user/me";
+        String reqURL = "https://openapi.naver.com/v1/nid/me";
         String result = "";
         try {
 
@@ -72,14 +72,13 @@ public class KakaoUserService implements SocialUserService{
                 JSONParser parser = new JSONParser();
                 JSONObject jsonObj = (JSONObject) parser.parse(userInfo);
 
-                JSONObject kakao_account = (JSONObject) jsonObj.get("kakao_account");
-                JSONObject profile =(JSONObject) kakao_account.get("profile");
+                JSONObject account = (JSONObject) jsonObj.get("response");
 
-                userDto.setSocialId(jsonObj.get("id").toString());
-                userDto.setEmail(kakao_account.get("email").toString());
-                userDto.setNickname(profile.get("nickname").toString());
-                userDto.setProfileHref(profile.get("profile_image_url").toString());
-                userDto.setPassword(passwordEncoder.encode(jsonObj.get("id").toString()));
+                userDto.setSocialId(account.get("id").toString());
+                userDto.setEmail(account.get("email").toString());
+                userDto.setNickname(account.get("nickname").toString());
+                userDto.setProfileHref(account.get("profile_image").toString());
+                userDto.setPassword(passwordEncoder.encode(account.get("id").toString()));
                 logger.debug(userDto.toString());
 
             } catch (ParseException e) {

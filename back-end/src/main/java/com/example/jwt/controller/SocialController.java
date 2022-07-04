@@ -5,6 +5,8 @@ import com.example.jwt.dto.TokenDto;
 import com.example.jwt.security.JwtFilter;
 import com.example.jwt.security.TokenProvider;
 import com.example.jwt.service.KakaoUserService;
+import com.example.jwt.service.NaverUserService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -28,14 +30,16 @@ public class SocialController {
     private final KakaoUserService kakaoUserService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
+    private final NaverUserService naverUserService;
 
     public SocialController(TokenProvider tokenProvider,
                             AuthenticationManagerBuilder authenticationManagerBuilder,
-                            KakaoUserService kakaoUserService) {
+                            KakaoUserService kakaoUserService,
+                            NaverUserService naverUserService) {
         this.kakaoUserService=kakaoUserService;
-            this.tokenProvider = tokenProvider;
-            this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.tokenProvider = tokenProvider;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.naverUserService = naverUserService;
     }
 
     @PostMapping("/kakao")
@@ -55,5 +59,22 @@ public class SocialController {
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
+    @PostMapping("/naver")
+    public ResponseEntity<TokenDto> naverCallback (@RequestBody HashMap<String, String> param){
+        logger.debug(param.toString());
+        SocialUserDto socialUserDto = naverUserService.getUserInfoByAccessToken(param.get("access_token"));
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(socialUserDto.getEmail(), socialUserDto.getSocialId());
+        logger.debug(authenticationToken.toString());
 
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        logger.debug(authentication.toString());
+
+        String jwt = tokenProvider.createToken(authentication);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+    }
 }
